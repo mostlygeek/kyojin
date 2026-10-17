@@ -142,8 +142,9 @@ jobs:
       # Tags: <version> always; <major.minor> and latest only for plain X.Y.Z releases, so a
       # pre-release tag never moves them. Never pushes under act.
       # Layer cache lives in ghcr.io/<owner>/kyojin-buildcache: a fresh runner has no local cache, and
-      # without it every release recompiles the dependency and extension layers even when only the
-      # Python source changed. Read on every build; written only by pushing builds, and only for the
+      # without it every release reinstalls the dependency layer and recompiles the extension layer.
+      # The extension layer reads exllamav3/version.py, so a release always rebuilds it; the
+      # dependency layer is reused until requirements.txt or the torch/SDK pins change. Read on every build; written only by pushing builds, and only for the
       # first model, since the others differ from it in the last layer alone.
       - name: Build and push images
         env:
